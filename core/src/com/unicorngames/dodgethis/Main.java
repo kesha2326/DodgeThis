@@ -12,14 +12,13 @@ import java.security.Key;
 public class Main extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture img;
-	public int posx = 0, posy = 0;
-	public int speed = 3;
-	public int vy = 0, vyspeed = 1;
+	Player player;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		img = new Texture("snake.jpg");
+		player = new Player();
+
 	}
 
 	@Override
@@ -28,28 +27,13 @@ public class Main extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		batch.draw(img, posx, posy);
+		player.render(batch);
 		batch.end();
 	}
 
 	public void update() {
-        if (Gdx.input.isKeyPressed(Input.Keys.W) && posy >= 0) {
-            if (posy == 0) {
-                vy = 20;
-            }
-            vy -= vyspeed;
-            posy += vy;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.A) && posx > 0) {
-            posx -= speed;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.D) && posx < 970-1) {
-            posx += speed;
-        }
+		player.update();
 	}
-//	public void jump() {
-//        vy = 10;
-//    }
 
 	@Override
 	public void dispose () {
