@@ -14,6 +14,7 @@ public class Main extends ApplicationAdapter {
 	Texture control;
 	Player player;
 	Level1 lv1;
+	FrameRate fr;
 	
 	@Override
 	public void create () {
@@ -21,6 +22,7 @@ public class Main extends ApplicationAdapter {
 		player = new Player();
 		control = new Texture("control.png");
 		lv1 = new Level1();
+		fr = new FrameRate();
 	}
 //
 	@Override
@@ -32,12 +34,14 @@ public class Main extends ApplicationAdapter {
 		batch.draw(control, 0, 714);
 		lv1.render(batch);
 		player.render(batch);
+		fr.render();
 		batch.end();
 	}
 
 	public void update() {
 		player.update();
 		lv1.update();
+		fr.update();
 	}
 
 	@Override
