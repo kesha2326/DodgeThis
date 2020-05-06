@@ -8,7 +8,9 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Player {
     Texture skin;
+
     Vector2 position;
+
     public int difficulty = 3;
 
     public Player() {

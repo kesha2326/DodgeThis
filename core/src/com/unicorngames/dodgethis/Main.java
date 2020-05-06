@@ -11,14 +11,14 @@ import java.security.Key;
 
 public class Main extends ApplicationAdapter {
 	SpriteBatch batch;
-	Texture img;
+	Texture control;
 	Player player;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
 		player = new Player();
-
+		control = new Texture("control.png");
 	}
 
 	@Override
@@ -27,6 +27,7 @@ public class Main extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
+		batch.draw(control, 0, 714);
 		player.render(batch);
 		batch.end();
 	}
@@ -38,6 +39,6 @@ public class Main extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 		batch.dispose();
-		img.dispose();
+		control.dispose();
 	}
 }
