@@ -13,14 +13,16 @@ public class Main extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture control;
 	Player player;
+	Level1 lv1;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
 		player = new Player();
 		control = new Texture("control.png");
+		lv1 = new Level1();
 	}
-
+//
 	@Override
 	public void render () {
 		update();
@@ -28,12 +30,14 @@ public class Main extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
 		batch.draw(control, 0, 714);
+		lv1.render(batch);
 		player.render(batch);
 		batch.end();
 	}
 
 	public void update() {
 		player.update();
+		lv1.update();
 	}
 
 	@Override
