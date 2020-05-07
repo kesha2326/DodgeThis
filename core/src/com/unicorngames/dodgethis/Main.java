@@ -34,8 +34,8 @@ public class Main extends ApplicationAdapter {
 		batch.draw(control, 0, 714);
 		lv1.render(batch);
 		player.render(batch);
-		fr.render();
 		batch.end();
+		fr.render();
 	}
 
 	public void update() {

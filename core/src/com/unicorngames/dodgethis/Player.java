@@ -24,17 +24,16 @@ public class Player {
 
     public void update() { //Method for math of the player
         //WASD movement realisation
-//        if (Gdx.input.isKeyPressed(Input.Keys.W) && position.y == 0) {
-//
-//        }
-//        if (Gdx.input.isKeyPressed(Input.Keys.S) && position.y > 0) {
-//            position.y -= difficulty;
-//        }
-//        if (Gdx.input.isKeyPressed(Input.Keys.D) && position.x < 970) {
-//            position.x += difficulty;
-//        }
-//        if (Gdx.input.isKeyPressed(Input.Keys.A) && position.x > 0) {
-//            position.x -= difficulty;
-//        }
+        if (Gdx.input.isKeyPressed(Input.Keys.W) && position.y <= 250) {
+            vy = 10;
+            position.y += 5;
+        }
+        else if (position.y > 250){
+            vy -= gravity;
+            position.y += vy;
+            if (position.y < 250){
+                vy = 0;
+            }
+        }
     }
 }
