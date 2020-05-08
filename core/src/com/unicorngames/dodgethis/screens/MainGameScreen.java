@@ -1,6 +1,7 @@
 package com.unicorngames.dodgethis.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,14 +11,16 @@ import com.unicorngames.dodgethis.DodgeThis;
 
 public class MainGameScreen implements Screen {
 
-    public static float SPEED = 200;
+    public static float SPEED = 150;
 
     public static final float WALKING_ANIMATION_SPEED = 0.3f;
     public static final int PERSON_WIDTH_PIXELS = 35;
     public static final int PERSON_HEIGHT_PIXELS = 70;
 
-    Animation walkAnimation;
-    TextureRegion[] walkFrames;
+    Animation walkLeftAnimation;
+    Animation walkRightAnimation;
+    TextureRegion[] walkLeftFrames;
+    TextureRegion[] walkRightFrames;
 
     float x;
     float y;
@@ -28,15 +31,21 @@ public class MainGameScreen implements Screen {
     public MainGameScreen(DodgeThis dodgeThis) {
         this.dodgeThis = dodgeThis;
         x = dodgeThis.WIDTH / 2 - PERSON_WIDTH_PIXELS - 2;
-        y = 100;
+        y = 200;
 
         TextureRegion[][] textureSpriteSheet = TextureRegion.split(new Texture("person_walking.png"), PERSON_WIDTH_PIXELS, PERSON_HEIGHT_PIXELS);
-        walkFrames = new TextureRegion[7];
-
-        for (int i = 0; i <7 ; i++) {
-                walkFrames[i] = textureSpriteSheet[0][i];
+        walkLeftFrames = new TextureRegion[4];
+        walkRightFrames = new TextureRegion[4];
+        for (int i = 0; i <3 ; i++) {
+                walkLeftFrames[i] = textureSpriteSheet[0][i];
+            walkRightFrames[i] = textureSpriteSheet[0][i+4];
         }
-        walkAnimation = new Animation(WALKING_ANIMATION_SPEED, walkFrames);
+
+        walkLeftFrames[3] = textureSpriteSheet[0][1];
+        walkRightFrames[3] = textureSpriteSheet[0][5];
+        walkLeftAnimation = new Animation(WALKING_ANIMATION_SPEED, walkLeftFrames);
+        walkRightAnimation = new Animation(WALKING_ANIMATION_SPEED, walkRightFrames);
+
         stateTime = 0f;
     }
 
@@ -55,7 +64,19 @@ public class MainGameScreen implements Screen {
 
         dodgeThis.batch.begin();
 
-        dodgeThis.batch.draw((TextureRegion) walkAnimation.getKeyFrame(stateTime, true), 50, 50);
+        if (Gdx.input.isKeyPressed(Input.Keys.D) && x + PERSON_WIDTH_PIXELS < dodgeThis.WIDTH) {
+            x += SPEED * Gdx.graphics.getDeltaTime();
+            dodgeThis.batch.draw((TextureRegion) walkRightAnimation.getKeyFrame(stateTime, true), x, y);
+
+        }
+
+        else if (Gdx.input.isKeyPressed(Input.Keys.A) && x > 0) {
+            x -= SPEED * Gdx.graphics.getDeltaTime();
+            dodgeThis.batch.draw((TextureRegion) walkLeftAnimation.getKeyFrame(stateTime, true), x, y);
+
+        }
+        else
+        dodgeThis.batch.draw(new Texture("person_staying.png"), x, y);
 
         dodgeThis.batch.end();
     }
