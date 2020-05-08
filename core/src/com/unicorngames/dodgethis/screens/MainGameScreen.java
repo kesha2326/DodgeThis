@@ -11,7 +11,7 @@ import com.unicorngames.dodgethis.DodgeThis;
 
 public class MainGameScreen implements Screen {
 
-    public static float SPEED = 250;
+    public static float SPEED = 200;
 
     public static final float WALKING_ANIMATION_SPEED = 0.3f;
     public static final int PERSON_WIDTH_PIXELS = 35;
@@ -75,6 +75,7 @@ public class MainGameScreen implements Screen {
         } else {
             dodgeThis.batch.draw(new Texture("person_staying.png"), x, y);
         }
+        dodgeThis.batch.draw(new Texture("grass_platform.png"), 0 , y - 30);
 
         dodgeThis.batch.end();
     }
