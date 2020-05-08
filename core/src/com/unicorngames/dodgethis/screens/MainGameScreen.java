@@ -11,7 +11,7 @@ import com.unicorngames.dodgethis.DodgeThis;
 
 public class MainGameScreen implements Screen {
 
-    public static float SPEED = 150;
+    public static float SPEED = 250;
 
     public static final float WALKING_ANIMATION_SPEED = 0.3f;
     public static final int PERSON_WIDTH_PIXELS = 35;
@@ -68,15 +68,13 @@ public class MainGameScreen implements Screen {
             x += SPEED * Gdx.graphics.getDeltaTime();
             dodgeThis.batch.draw((TextureRegion) walkRightAnimation.getKeyFrame(stateTime, true), x, y);
 
-        }
-
-        else if (Gdx.input.isKeyPressed(Input.Keys.A) && x > 0) {
+        } else if (Gdx.input.isKeyPressed(Input.Keys.A) && x > 0) {
             x -= SPEED * Gdx.graphics.getDeltaTime();
             dodgeThis.batch.draw((TextureRegion) walkLeftAnimation.getKeyFrame(stateTime, true), x, y);
 
+        } else {
+            dodgeThis.batch.draw(new Texture("person_staying.png"), x, y);
         }
-        else
-        dodgeThis.batch.draw(new Texture("person_staying.png"), x, y);
 
         dodgeThis.batch.end();
     }
