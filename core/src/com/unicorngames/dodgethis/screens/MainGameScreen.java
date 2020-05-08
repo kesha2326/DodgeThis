@@ -1,24 +1,43 @@
 package com.unicorngames.dodgethis.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.loaders.I18NBundleLoader;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.unicorngames.dodgethis.DodgeThis;
 
 public class MainGameScreen implements Screen {
 
-    DodgeThis dodgeThis;
+    public static float SPEED = 200;
 
-    Texture tx;
-    public int cubex = 0;
-    public int cubey = 0;
+    public static final float WALKING_ANIMATION_SPEED = 0.3f;
+    public static final int PERSON_WIDTH_PIXELS = 35;
+    public static final int PERSON_HEIGHT_PIXELS = 70;
+
+    Animation walkAnimation;
+    TextureRegion[] walkFrames;
+
+    float x;
+    float y;
+    float stateTime;
+
+    DodgeThis dodgeThis;
 
     public MainGameScreen(DodgeThis dodgeThis) {
         this.dodgeThis = dodgeThis;
-        tx = new Texture("snake.jpg");
+        x = dodgeThis.WIDTH / 2 - PERSON_WIDTH_PIXELS - 2;
+        y = 100;
+
+        TextureRegion[][] textureSpriteSheet = TextureRegion.split(new Texture("person_walking.png"), PERSON_WIDTH_PIXELS, PERSON_HEIGHT_PIXELS);
+        walkFrames = new TextureRegion[7];
+
+        for (int i = 0; i <7 ; i++) {
+                walkFrames[i] = textureSpriteSheet[0][i];
+        }
+        walkAnimation = new Animation(WALKING_ANIMATION_SPEED, walkFrames);
+        stateTime = 0f;
     }
 
     @Override
@@ -29,25 +48,14 @@ public class MainGameScreen implements Screen {
     @Override
     public void render(float delta) {
 
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+        stateTime += Gdx.graphics.getDeltaTime();
+
+        Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         dodgeThis.batch.begin();
 
-        dodgeThis.batch.draw(tx, cubex, cubey);
-
-        if (Gdx.input.isKeyPressed(Input.Keys.W) && cubey < dodgeThis.HEIGHT - 30) {
-            cubey += 4;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.S) && cubey > 0) {
-            cubey -= 4;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.A) && cubex > 0) {
-            cubex -= 4;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.D) && cubex < dodgeThis.WIDTH - 30) {
-            cubex += 4;
-        }
+        dodgeThis.batch.draw((TextureRegion) walkAnimation.getKeyFrame(stateTime, true), 50, 50);
 
         dodgeThis.batch.end();
     }
