@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.unicorngames.dodgethis.DodgeThis;
+import com.unicorngames.dodgethis.entities.Box;
 
 public class MainGameScreen implements Screen {
 
@@ -30,6 +31,7 @@ public class MainGameScreen implements Screen {
     float gravity;
 
     DodgeThis dodgeThis;
+    Box box;
 
     public MainGameScreen(DodgeThis dodgeThis) {
         this.dodgeThis = dodgeThis;
@@ -39,6 +41,8 @@ public class MainGameScreen implements Screen {
         isJumped = false;
         gravity = 0.7f;
         vy = 0;
+
+        box = new Box(700, 200);
 
         TextureRegion[][] textureSpriteSheet = TextureRegion.split(new Texture("person_walking.png"), PERSON_WIDTH_PIXELS, PERSON_HEIGHT_PIXELS);
         walkLeftFrames = new TextureRegion[4];
@@ -86,7 +90,7 @@ public class MainGameScreen implements Screen {
             dodgeThis.batch.draw(new Texture("person_staying.png"), x, y);
         }
         if (isJumped){
-            vy -= gravity;
+            vy -= gravity ;
             y += vy;
             if (y < 200){
                 isJumped = false;
@@ -94,7 +98,7 @@ public class MainGameScreen implements Screen {
             }
         }
         dodgeThis.batch.draw(new Texture("grass_platform.png"), 0 , 170);
-
+        box.render(dodgeThis.batch);
         dodgeThis.batch.end();
     }
 
