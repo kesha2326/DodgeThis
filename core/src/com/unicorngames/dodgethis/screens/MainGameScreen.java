@@ -12,6 +12,7 @@ import com.unicorngames.dodgethis.DodgeThis;
 public class MainGameScreen implements Screen {
 
     public static float SPEED = 200;
+    public boolean isJumped;
 
     public static final float WALKING_ANIMATION_SPEED = 0.3f;
     public static final int PERSON_WIDTH_PIXELS = 35;
@@ -25,6 +26,8 @@ public class MainGameScreen implements Screen {
     float x;
     float y;
     float stateTime;
+    float vy;
+    float gravity;
 
     DodgeThis dodgeThis;
 
@@ -32,6 +35,10 @@ public class MainGameScreen implements Screen {
         this.dodgeThis = dodgeThis;
         x = dodgeThis.WIDTH / 2 - PERSON_WIDTH_PIXELS - 2;
         y = 200;
+
+        isJumped = false;
+        gravity = 0.7f;
+        vy = 0;
 
         TextureRegion[][] textureSpriteSheet = TextureRegion.split(new Texture("person_walking.png"), PERSON_WIDTH_PIXELS, PERSON_HEIGHT_PIXELS);
         walkLeftFrames = new TextureRegion[4];
@@ -63,7 +70,10 @@ public class MainGameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         dodgeThis.batch.begin();
-
+        if (Gdx.input.isKeyPressed(Input.Keys.W) && y == 200) {
+            isJumped = true;
+            vy += 10;
+        }
         if (Gdx.input.isKeyPressed(Input.Keys.D) && x + PERSON_WIDTH_PIXELS < dodgeThis.WIDTH) {
             x += SPEED * Gdx.graphics.getDeltaTime();
             dodgeThis.batch.draw((TextureRegion) walkRightAnimation.getKeyFrame(stateTime, true), x, y);
@@ -75,7 +85,15 @@ public class MainGameScreen implements Screen {
         } else {
             dodgeThis.batch.draw(new Texture("person_staying.png"), x, y);
         }
-        dodgeThis.batch.draw(new Texture("grass_platform.png"), 0 , y - 30);
+        if (isJumped){
+            vy -= gravity;
+            y += vy;
+            if (y < 200){
+                isJumped = false;
+                y = 200;
+            }
+        }
+        dodgeThis.batch.draw(new Texture("grass_platform.png"), 0 , 170);
 
         dodgeThis.batch.end();
     }
