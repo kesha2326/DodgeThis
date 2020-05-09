@@ -94,7 +94,7 @@ public class MainGameScreen implements Screen {
             y += vy;
             if (y < 200){
                 isJumped = false;
-                y = 200;
+                y = 200;//
             }
         }
         dodgeThis.batch.draw(new Texture("grass_platform.png"), 0 , 170);
