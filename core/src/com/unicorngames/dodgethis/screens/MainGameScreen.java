@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.unicorngames.dodgethis.DodgeThis;
 import com.unicorngames.dodgethis.entities.Box;
 import com.unicorngames.dodgethis.entities.Platforms;
+import com.unicorngames.dodgethis.entities.TreeTexture;
 import com.unicorngames.dodgethis.tools.CollisionProcessing;
 
 public class MainGameScreen implements Screen {
@@ -37,20 +38,24 @@ public class MainGameScreen implements Screen {
     Box box;
     CollisionProcessing collision;
     Platforms platforms;
+    TreeTexture tree;
 
     public MainGameScreen(DodgeThis dodgeThis) {
         this.dodgeThis = dodgeThis;
+
+        platforms = new Platforms();
+
         x = dodgeThis.WIDTH / 2 - PERSON_WIDTH_PIXELS - 2;
-        y = 200;
+        y = 200 + platforms.getPLATFORM_HEIGHT();
 
         gravity = 0.7f;
-        vy = 0;
+        vy = 10;
         isJumped = false;
         onPlatform = true;
 
-        box = new Box(700, 200);
+        box = new Box(700, 200 + platforms.getPLATFORM_HEIGHT());
         collision = new CollisionProcessing(x, y, PERSON_WIDTH_PIXELS, PERSON_HEIGHT_PIXELS);
-        platforms = new Platforms(0, 200);
+        tree = new TreeTexture(platforms.x, platforms.y + platforms.getPLATFORM_HEIGHT());
 
         TextureRegion[][] textureSpriteSheet = TextureRegion.split(new Texture("person_walking.png"), PERSON_WIDTH_PIXELS, PERSON_HEIGHT_PIXELS);
         walkLeftFrames = new TextureRegion[4];
@@ -85,27 +90,27 @@ public class MainGameScreen implements Screen {
         dodgeThis.batch.begin();
 
         //drawing objects
-        dodgeThis.batch.draw(new Texture("tree.png"), platforms.x, platforms.y, 56 * 3, 80 * 3);
+        tree.render(dodgeThis.batch);
         platforms.render(dodgeThis.batch);
         box.render(dodgeThis.batch);
 
 
-        if (isJumped) { // Jump realisation (checking under person platform y + platform height)
-            vy -= gravity;
+        // Jump realisation (checking under person platform y + platform height)
+        if (isJumped) {
             y += vy;
-            if (y < platforms.y + platforms.getPLATFORM_HEIGHT()) {
+            vy -= gravity;
+            if (getCollisionProcessing().collidesWith(platforms.getCollisionProcessing())) {
                 isJumped = false;
                 y = platforms.y + platforms.getPLATFORM_HEIGHT();
+                vy = 10;
             }
         }
 
         //person moving
 
-        if (Gdx.input.isKeyPressed(Input.Keys.W) && y == platforms.y) {
-            System.out.println(platforms.y);
-            // onPlatform = false;
-            //isJumped = true;
-            //vy += 15;
+        if (Gdx.input.isKeyPressed(Input.Keys.W) && y == platforms.y + platforms.getPLATFORM_HEIGHT()) {
+            isJumped = true;
+            System.out.println(getCollisionProcessing().collidesWith(platforms.getCollisionProcessing()));
         }
 
         //moving right, and if we have box collision, pushing the box
