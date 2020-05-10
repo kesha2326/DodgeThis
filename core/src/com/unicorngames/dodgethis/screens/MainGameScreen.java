@@ -82,19 +82,26 @@ public class MainGameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         dodgeThis.batch.begin();
-        if (Gdx.input.isKeyPressed(Input.Keys.W) && y == 200) {
+
+        dodgeThis.batch.draw(new Texture("tree.png"), 200, platforms.y - 1, 56 * 3, 81 * 3);
+
+        if (Gdx.input.isKeyPressed(Input.Keys.W) && y == platforms.y + platforms.getPLATFORM_HEIGHT()) {
            // onPlatform = false;
             isJumped = true;
             vy += 15;
         }
+        //moving right, and if we have box collision, pushing the box
         if (Gdx.input.isKeyPressed(Input.Keys.D) && x + PERSON_WIDTH_PIXELS < dodgeThis.WIDTH) {
+            //box & person collision checking
             if(getCollisionProcessing().collidesWith(box.getCollisionProcessing()) && x + PERSON_WIDTH_PIXELS < box.x + 4 && x + PERSON_WIDTH_PIXELS > box.x) {
                 box.x += SPEED * Gdx.graphics.getDeltaTime();
             }
             x += SPEED * Gdx.graphics.getDeltaTime();
             dodgeThis.batch.draw((TextureRegion) walkRightAnimation.getKeyFrame(stateTime, true), x, y);
-
-        } else if (Gdx.input.isKeyPressed(Input.Keys.A) && x > 0) {
+        }
+        //moving left, and if we have box collision, pushing the box
+        else if (Gdx.input.isKeyPressed(Input.Keys.A) && x > 0) {
+            //box & person collision checking
             if(getCollisionProcessing().collidesWith(box.getCollisionProcessing()) && x > box.x + box.WIDTH - 4 && x < box.x + box.WIDTH) {
                 box.x -= SPEED * Gdx.graphics.getDeltaTime();
             }
@@ -104,21 +111,18 @@ public class MainGameScreen implements Screen {
         } else {
             dodgeThis.batch.draw(new Texture("person_staying.png"), x, y);
         }
-
-        if (isJumped) {
-            vy -= gravity;
-            y += vy;
-            if (y < 200) {
-                isJumped = false;
-                y = 200;
-            }
-        }
-//        if (x + PERSON_WIDTH_PIXELS > box.x && x < box.x + box.WIDTH) {
+//        if (getCollisionProcessing().collidesWith(box.getCollisionProcessing()) && y < box.y + box.HEIGHT) {
 //            y = box.y + box.HEIGHT;
 //        }
-//        if (x + PERSON_WIDTH_PIXELS < box.x || x > box.x + box.WIDTH) {
-//            y = 200;
-//        }
+
+        if (isJumped) { // Jump realisation (checking under person platform y + platform height)
+            vy -= gravity;
+            y += vy;
+            if (y < platforms.y + platforms.getPLATFORM_HEIGHT()) {
+                isJumped = false;
+                y = platforms.y + platforms.getPLATFORM_HEIGHT();
+            }
+        }
         platforms.render(dodgeThis.batch);
         box.render(dodgeThis.batch);
         collision.move(x, y);
