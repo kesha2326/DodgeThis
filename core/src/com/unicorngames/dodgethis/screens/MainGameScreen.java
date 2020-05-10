@@ -9,11 +9,12 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.unicorngames.dodgethis.DodgeThis;
 import com.unicorngames.dodgethis.entities.Box;
+import com.unicorngames.dodgethis.entities.Platforms;
+import com.unicorngames.dodgethis.tools.CollisionProcessing;
 
 public class MainGameScreen implements Screen {
 
     public static float SPEED = 200;
-    public boolean isJumped;
 
     public static final float WALKING_ANIMATION_SPEED = 0.3f;
     public static final int PERSON_WIDTH_PIXELS = 35;
@@ -29,20 +30,27 @@ public class MainGameScreen implements Screen {
     float stateTime;
     float vy;
     float gravity;
+    boolean isJumped;
+    boolean onPlatform;
 
     DodgeThis dodgeThis;
     Box box;
+    CollisionProcessing collision;
+    Platforms platforms;
 
     public MainGameScreen(DodgeThis dodgeThis) {
         this.dodgeThis = dodgeThis;
         x = dodgeThis.WIDTH / 2 - PERSON_WIDTH_PIXELS - 2;
         y = 200;
 
-        isJumped = false;
         gravity = 0.7f;
         vy = 0;
+        isJumped = false;
+        onPlatform = true;
 
         box = new Box(700, 200);
+        collision = new CollisionProcessing(x, y, PERSON_WIDTH_PIXELS, PERSON_HEIGHT_PIXELS);
+        platforms = new Platforms(0, 200);
 
         TextureRegion[][] textureSpriteSheet = TextureRegion.split(new Texture("person_walking.png"), PERSON_WIDTH_PIXELS, PERSON_HEIGHT_PIXELS);
         walkLeftFrames = new TextureRegion[4];
@@ -75,8 +83,9 @@ public class MainGameScreen implements Screen {
 
         dodgeThis.batch.begin();
         if (Gdx.input.isKeyPressed(Input.Keys.W) && y == 200) {
+           // onPlatform = false;
             isJumped = true;
-            vy += 10;
+            vy += 15;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.D) && x + PERSON_WIDTH_PIXELS < dodgeThis.WIDTH) {
             x += SPEED * Gdx.graphics.getDeltaTime();
@@ -89,17 +98,31 @@ public class MainGameScreen implements Screen {
         } else {
             dodgeThis.batch.draw(new Texture("person_staying.png"), x, y);
         }
-        if (isJumped){
-            vy -= gravity ;
+
+        if (isJumped) {
+            vy -= gravity;
             y += vy;
-            if (y < 200){
+            if (y < 200) {
                 isJumped = false;
-                y = 200;//
+                y = 200;
             }
         }
-        dodgeThis.batch.draw(new Texture("grass_platform.png"), 0 , 170);
+//        if (x + PERSON_WIDTH_PIXELS > box.x && x < box.x + box.WIDTH) {
+//            y = box.y + box.HEIGHT;
+//        }
+//        if (x + PERSON_WIDTH_PIXELS < box.x || x > box.x + box.WIDTH) {
+//            y = 200;
+//        }
+        platforms.render(dodgeThis.batch);
         box.render(dodgeThis.batch);
+        if(getCollisionProcessing().collidesWith(box.getCollisionProcessing())) {
+            System.out.println("collides");
+        }
+        collision.move(x, y);
         dodgeThis.batch.end();
+    }
+    public CollisionProcessing getCollisionProcessing() {
+        return collision;
     }
 
     @Override
