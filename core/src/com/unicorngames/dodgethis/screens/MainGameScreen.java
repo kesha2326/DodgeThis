@@ -77,19 +77,37 @@ public class MainGameScreen implements Screen {
     public void render(float delta) {
 
         stateTime += Gdx.graphics.getDeltaTime();
+        collision.move(x, y);
 
         Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         dodgeThis.batch.begin();
 
+        //drawing objects
         dodgeThis.batch.draw(new Texture("tree.png"), platforms.x, platforms.y, 56 * 3, 80 * 3);
+        platforms.render(dodgeThis.batch);
+        box.render(dodgeThis.batch);
 
-        if (Gdx.input.isKeyPressed(Input.Keys.W) && y == platforms.y + platforms.getPLATFORM_HEIGHT()) {
-           // onPlatform = false;
-            isJumped = true;
-            vy += 15;
+
+        if (isJumped) { // Jump realisation (checking under person platform y + platform height)
+            vy -= gravity;
+            y += vy;
+            if (y < platforms.y + platforms.getPLATFORM_HEIGHT()) {
+                isJumped = false;
+                y = platforms.y + platforms.getPLATFORM_HEIGHT();
+            }
         }
+
+        //person moving
+
+        if (Gdx.input.isKeyPressed(Input.Keys.W) && y == platforms.y) {
+            System.out.println(platforms.y);
+            // onPlatform = false;
+            //isJumped = true;
+            //vy += 15;
+        }
+
         //moving right, and if we have box collision, pushing the box
         if (Gdx.input.isKeyPressed(Input.Keys.D) && x + PERSON_WIDTH_PIXELS < dodgeThis.WIDTH) {
             //box & person collision checking
@@ -99,6 +117,7 @@ public class MainGameScreen implements Screen {
             x += SPEED * Gdx.graphics.getDeltaTime();
             dodgeThis.batch.draw((TextureRegion) walkRightAnimation.getKeyFrame(stateTime, true), x, y);
         }
+
         //moving left, and if we have box collision, pushing the box
         else if (Gdx.input.isKeyPressed(Input.Keys.A) && x > 0) {
             //box & person collision checking
@@ -111,21 +130,7 @@ public class MainGameScreen implements Screen {
         } else {
             dodgeThis.batch.draw(new Texture("person_staying.png"), x, y);
         }
-//        if (getCollisionProcessing().collidesWith(box.getCollisionProcessing()) && y < box.y + box.HEIGHT) {
-//            y = box.y + box.HEIGHT;
-//        }
 
-        if (isJumped) { // Jump realisation (checking under person platform y + platform height)
-            vy -= gravity;
-            y += vy;
-            if (y < platforms.y + platforms.getPLATFORM_HEIGHT()) {
-                isJumped = false;
-                y = platforms.y + platforms.getPLATFORM_HEIGHT();
-            }
-        }
-        platforms.render(dodgeThis.batch);
-        box.render(dodgeThis.batch);
-        collision.move(x, y);
         dodgeThis.batch.end();
     }
     public CollisionProcessing getCollisionProcessing() {
