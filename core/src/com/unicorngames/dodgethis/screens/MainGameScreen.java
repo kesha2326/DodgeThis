@@ -88,10 +88,16 @@ public class MainGameScreen implements Screen {
             vy += 15;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.D) && x + PERSON_WIDTH_PIXELS < dodgeThis.WIDTH) {
+            if(getCollisionProcessing().collidesWith(box.getCollisionProcessing()) && x + PERSON_WIDTH_PIXELS < box.x + 4 && x + PERSON_WIDTH_PIXELS > box.x) {
+                box.x += SPEED * Gdx.graphics.getDeltaTime();
+            }
             x += SPEED * Gdx.graphics.getDeltaTime();
             dodgeThis.batch.draw((TextureRegion) walkRightAnimation.getKeyFrame(stateTime, true), x, y);
 
         } else if (Gdx.input.isKeyPressed(Input.Keys.A) && x > 0) {
+            if(getCollisionProcessing().collidesWith(box.getCollisionProcessing()) && x > box.x + box.WIDTH - 4 && x < box.x + box.WIDTH) {
+                box.x -= SPEED * Gdx.graphics.getDeltaTime();
+            }
             x -= SPEED * Gdx.graphics.getDeltaTime();
             dodgeThis.batch.draw((TextureRegion) walkLeftAnimation.getKeyFrame(stateTime, true), x, y);
 
@@ -115,9 +121,6 @@ public class MainGameScreen implements Screen {
 //        }
         platforms.render(dodgeThis.batch);
         box.render(dodgeThis.batch);
-        if(getCollisionProcessing().collidesWith(box.getCollisionProcessing())) {
-            System.out.println("collides");
-        }
         collision.move(x, y);
         dodgeThis.batch.end();
     }

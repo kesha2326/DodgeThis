@@ -22,6 +22,7 @@ public class Box {
 
     public void render(SpriteBatch batch) {
         batch.draw(texture, x, y);
+        collision.move(x, y);
     }
 
     public CollisionProcessing getCollisionProcessing() {
