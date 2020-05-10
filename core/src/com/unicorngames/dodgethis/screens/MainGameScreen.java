@@ -83,7 +83,7 @@ public class MainGameScreen implements Screen {
 
         dodgeThis.batch.begin();
 
-        dodgeThis.batch.draw(new Texture("tree.png"), 200, platforms.y - 1, 56 * 3, 81 * 3);
+        dodgeThis.batch.draw(new Texture("tree.png"), platforms.x, platforms.y, 56 * 3, 80 * 3);
 
         if (Gdx.input.isKeyPressed(Input.Keys.W) && y == platforms.y + platforms.getPLATFORM_HEIGHT()) {
            // onPlatform = false;
