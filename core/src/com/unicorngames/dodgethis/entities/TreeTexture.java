@@ -14,6 +14,6 @@ public class TreeTexture {
     }
 
     public void render(SpriteBatch batch) {
-        batch.draw(new Texture("tree.png"), x, y, 56 * 3, 80 * 3);
+        batch.draw(new Texture("tree.png"), x, y, 56 * 3, 90 * 3);
     }
 }

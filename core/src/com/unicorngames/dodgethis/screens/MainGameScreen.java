@@ -105,12 +105,15 @@ public class MainGameScreen implements Screen {
                 vy = 10;
             }
         }
+        //checking the top of the box
+        if (getCollisionProcessing().collidesWith(box.getCollisionProcessing()) && y > box.y + box.HEIGHT - 4 && y < box.y + box.HEIGHT) {
+
+        }
 
         //person moving
 
         if (Gdx.input.isKeyPressed(Input.Keys.W) && y == platforms.y + platforms.getPLATFORM_HEIGHT()) {
             isJumped = true;
-            System.out.println(getCollisionProcessing().collidesWith(platforms.getCollisionProcessing()));
         }
 
         //moving right, and if we have box collision, pushing the box
