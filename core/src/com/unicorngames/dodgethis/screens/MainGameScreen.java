@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.unicorngames.dodgethis.DodgeThis;
+import com.unicorngames.dodgethis.entities.Background;
 import com.unicorngames.dodgethis.entities.Box;
 import com.unicorngames.dodgethis.entities.Platforms;
 import com.unicorngames.dodgethis.entities.TreeTexture;
@@ -41,12 +42,14 @@ public class MainGameScreen implements Screen {
     Platforms platforms;
     TreeTexture tree;
     Healthbar healthbar;
+    Background background;
 
     public MainGameScreen(DodgeThis dodgeThis) {
         this.dodgeThis = dodgeThis;
 
         platforms = new Platforms();
         healthbar = new Healthbar(dodgeThis.WIDTH, dodgeThis.HEIGHT);
+        background = new Background();
 
         x = dodgeThis.WIDTH / 2 - PERSON_WIDTH_PIXELS - 2;
         y = 200 + platforms.getPLATFORM_HEIGHT();
@@ -91,6 +94,9 @@ public class MainGameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         dodgeThis.batch.begin();
+
+        //drawing background
+        background.render(dodgeThis.batch);
 
         //drawing objects
         tree.render(dodgeThis.batch);
