@@ -12,6 +12,7 @@ import com.unicorngames.dodgethis.entities.Box;
 import com.unicorngames.dodgethis.entities.Platforms;
 import com.unicorngames.dodgethis.entities.TreeTexture;
 import com.unicorngames.dodgethis.tools.CollisionProcessing;
+import com.unicorngames.dodgethis.tools.Healthbar;
 
 public class MainGameScreen implements Screen {
 
@@ -39,11 +40,13 @@ public class MainGameScreen implements Screen {
     CollisionProcessing collision;
     Platforms platforms;
     TreeTexture tree;
+    Healthbar healthbar;
 
     public MainGameScreen(DodgeThis dodgeThis) {
         this.dodgeThis = dodgeThis;
 
         platforms = new Platforms();
+        healthbar = new Healthbar(dodgeThis.WIDTH, dodgeThis.HEIGHT);
 
         x = dodgeThis.WIDTH / 2 - PERSON_WIDTH_PIXELS - 2;
         y = 200 + platforms.getPLATFORM_HEIGHT();
@@ -138,6 +141,18 @@ public class MainGameScreen implements Screen {
         } else {
             dodgeThis.batch.draw(new Texture("person_staying.png"), x, y);
         }
+
+        //Dragging box with E button
+        if (Gdx.input.isKeyPressed(Input.Keys.E) && getCollisionProcessing().collidesWith(box.getCollisionProcessing()) && x + PERSON_WIDTH_PIXELS < box.x + 4 && x + PERSON_WIDTH_PIXELS > box.x) {
+            box.x -= SPEED * Gdx.graphics.getDeltaTime();
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            healthbar.HEARTS -= 1;
+        }
+
+
+        healthbar.render(dodgeThis.batch);
 
         dodgeThis.batch.end();
     }
