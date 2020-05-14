@@ -12,6 +12,8 @@ public class MainMenuScreen implements Screen {
     private static final int PLAY_BUTTON_HEIGHT = 150;
     private static final int EXIT_BUTTON_WIDTH = 390;
     private static final int EXIT_BUTTON_HEIGHT = 150;
+    private static final int SETTINGS_BUTTON_WIDTH = 24;
+    private static final int SETTINGS_BUTTON_HEIGHT = 24;
 
     DodgeThis dodgeThis;
 
@@ -19,6 +21,8 @@ public class MainMenuScreen implements Screen {
     Texture playButtonActive;
     Texture exitButtonInactive;
     Texture exitButtonActive;
+    Texture settingsButtonInactive;
+    Texture settingsButtonActive;
 
     public MainMenuScreen(DodgeThis dodgeThis) {
         this.dodgeThis = dodgeThis;
@@ -26,6 +30,8 @@ public class MainMenuScreen implements Screen {
         playButtonActive = new Texture("play_button_active.png");
         exitButtonInactive = new Texture("exit_button_inactive.png");
         exitButtonActive = new Texture("exit_button_active.png");
+        settingsButtonInactive = new Texture("settings_icon_inactive.png");
+        settingsButtonActive = new Texture("settings_icon_active.png");
     }
 
     @Override
@@ -57,6 +63,15 @@ public class MainMenuScreen implements Screen {
             dodgeThis.batch.draw(exitButtonActive, dodgeThis.WIDTH / 2 - EXIT_BUTTON_WIDTH / 2, 200);
             if (Gdx.input.isTouched()){ //checks the mouse click on exit button
                 Gdx.app.exit();
+            }
+        }
+
+        if (Gdx.input.getX() < dodgeThis.WIDTH / 2 - SETTINGS_BUTTON_WIDTH / 2 || Gdx.input.getX() > dodgeThis.WIDTH / 2 + SETTINGS_BUTTON_WIDTH / 2 || Gdx.input.getY() < 376 || Gdx.input.getY() > 376 + SETTINGS_BUTTON_HEIGHT) { //checks the mouse in settings texture diaposone
+            dodgeThis.batch.draw(settingsButtonInactive, dodgeThis.WIDTH / 2 - SETTINGS_BUTTON_WIDTH / 2, 400);
+        } else {
+            dodgeThis.batch.draw(settingsButtonActive, dodgeThis.WIDTH / 2 - SETTINGS_BUTTON_WIDTH / 2, 400);
+            if (Gdx.input.isTouched()){ //checks the mouse click on settings button
+                //Gdx.app.exit();
             }
         }
 
